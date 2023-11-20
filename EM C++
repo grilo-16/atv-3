@@ -1,0 +1,129 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+struct Produto {
+    int codigo;
+    string descricao;
+    int quantidade;
+    float valor;
+};
+
+vector<Produto> estoque;
+
+void inicializaLista() {
+    estoque.clear();
+}
+
+void cadastrarProduto() {
+    Produto novoProduto;
+    cout << "Informe o código do produto: ";
+    cin >> novoProduto.codigo;
+
+    cout << "Informe a descrição do produto: ";
+    cin.ignore();
+    getline(cin, novoProduto.descricao);
+
+    cout << "Informe a quantidade do produto: ";
+    cin >> novoProduto.quantidade;
+
+    cout << "Informe o valor do produto: R$ ";
+    cin >> novoProduto.valor;
+
+    estoque.push_back(novoProduto);
+    cout << "Produto cadastrado com sucesso!" << endl;
+}
+
+void imprimirRelatorio() {
+    if (estoque.empty()) {
+        cout << "Estoque vazio." << endl;
+        return;
+    }
+
+    cout << "Relatório de Estoque:" << endl;
+    for (const auto& produto : estoque) {
+        cout << "Código: " << produto.codigo << endl;
+        cout << "Descrição: " << produto.descricao << endl;
+        cout << "Quantidade: " << produto.quantidade << endl;
+        cout << "Valor: R$ " << produto.valor << endl << endl;
+    }
+}
+
+void consultarProduto() {
+    int codigo;
+    cout << "Informe o código do produto a ser consultado: ";
+    cin >> codigo;
+
+    bool encontrado = false;
+    for (const auto& produto : estoque) {
+        if (produto.codigo == codigo) {
+            cout << "Código: " << produto.codigo << endl;
+            cout << "Descrição: " << produto.descricao << endl;
+            cout << "Quantidade: " << produto.quantidade << endl;
+            cout << "Valor: R$ " << produto.valor << endl;
+            encontrado = true;
+            break;
+        }
+    }
+
+    if (!encontrado) {
+        cout << "Produto não encontrado." << endl;
+    }
+}
+
+void removerProduto() {
+    int codigo;
+    cout << "Informe o código do produto a ser removido: ";
+    cin >> codigo;
+
+    for (auto it = estoque.begin(); it != estoque.end(); ++it) {
+        if (it->codigo == codigo) {
+            estoque.erase(it);
+            cout << "Produto removido do estoque." << endl;
+            return;
+        }
+    }
+
+    cout << "Produto não encontrado." << endl;
+}
+
+int main() {
+    int opcao;
+
+    do {
+        cout << "\n===== Menu =====" << endl;
+        cout << "1. Inicializar lista" << endl;
+        cout << "2. Cadastrar produto" << endl;
+        cout << "3. Imprimir relatório" << endl;
+        cout << "4. Consultar produto" << endl;
+        cout << "5. Remover produto" << endl;
+        cout << "6. Sair" << endl;
+        cout << "Escolha uma opção: ";
+        cin >> opcao;
+
+        switch (opcao) {
+            case 1:
+                inicializaLista();
+                break;
+            case 2:
+                cadastrarProduto();
+                break;
+            case 3:
+                imprimirRelatorio();
+                break;
+            case 4:
+                consultarProduto();
+                break;
+            case 5:
+                removerProduto();
+                break;
+            case 6:
+                cout << "Saindo do programa..." << endl;
+                break;
+            default:
+                cout << "Opção inválida." << endl;
+        }
+    } while (opcao != 6);
+
+    return 0;
+}
