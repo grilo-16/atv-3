@@ -1,0 +1,139 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_PRODUTOS 100
+
+struct Produto {
+    int codigo;
+    char descricao[100];
+    int quantidade;
+    float valor;
+};
+
+struct Produto estoque[MAX_PRODUTOS];
+int totalProdutos = 0;
+
+void inicializaLista() {
+    totalProdutos = 0;
+}
+
+void cadastrarProduto() {
+    struct Produto novoProduto;
+    printf("Informe o código do produto: ");
+    scanf("%d", &novoProduto.codigo);
+
+    printf("Informe a descrição do produto: ");
+    getchar();
+    fgets(novoProduto.descricao, sizeof(novoProduto.descricao), stdin);
+    novoProduto.descricao[strcspn(novoProduto.descricao, "\n")] = '\0'; // Remove a quebra de linha do fgets
+
+    printf("Informe a quantidade do produto: ");
+    scanf("%d", &novoProduto.quantidade);
+
+    printf("Informe o valor do produto: R$ ");
+    scanf("%f", &novoProduto.valor);
+
+    estoque[totalProdutos++] = novoProduto;
+    printf("Produto cadastrado com sucesso!\n");
+}
+
+void imprimirRelatorio() {
+    if (totalProdutos == 0) {
+        printf("Estoque vazio.\n");
+        return;
+    }
+
+    printf("Relatório de Estoque:\n");
+    for (int i = 0; i < totalProdutos; ++i) {
+        printf("Código: %d\n", estoque[i].codigo);
+        printf("Descrição: %s\n", estoque[i].descricao);
+        printf("Quantidade: %d\n", estoque[i].quantidade);
+        printf("Valor: R$ %.2f\n\n", estoque[i].valor);
+    }
+}
+
+void consultarProduto() {
+    int codigo;
+    printf("Informe o código do produto a ser consultado: ");
+    scanf("%d", &codigo);
+
+    int encontrado = 0;
+    for (int i = 0; i < totalProdutos; ++i) {
+        if (estoque[i].codigo == codigo) {
+            printf("Código: %d\n", estoque[i].codigo);
+            printf("Descrição: %s\n", estoque[i].descricao);
+            printf("Quantidade: %d\n", estoque[i].quantidade);
+            printf("Valor: R$ %.2f\n", estoque[i].valor);
+            encontrado = 1;
+            break;
+        }
+    }
+
+    if (!encontrado) {
+        printf("Produto não encontrado.\n");
+    }
+}
+
+void removerProduto() {
+    int codigo;
+    printf("Informe o código do produto a ser removido: ");
+    scanf("%d", &codigo);
+
+    int encontrado = 0;
+    for (int i = 0; i < totalProdutos; ++i) {
+        if (estoque[i].codigo == codigo) {
+            for (int j = i; j < totalProdutos - 1; ++j) {
+                estoque[j] = estoque[j + 1];
+            }
+            totalProdutos--;
+            printf("Produto removido do estoque.\n");
+            encontrado = 1;
+            break;
+        }
+    }
+
+    if (!encontrado) {
+        printf("Produto não encontrado.\n");
+    }
+}
+
+int main() {
+    int opcao;
+
+    do {
+        printf("\n===== Menu =====\n");
+        printf("1. Inicializar lista\n");
+        printf("2. Cadastrar produto\n");
+        printf("3. Imprimir relatório\n");
+        printf("4. Consultar produto\n");
+        printf("5. Remover produto\n");
+        printf("6. Sair\n");
+        printf("Escolha uma opção: ");
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+            case 1:
+                inicializaLista();
+                break;
+            case 2:
+                cadastrarProduto();
+                break;
+            case 3:
+                imprimirRelatorio();
+                break;
+            case 4:
+                consultarProduto();
+                break;
+            case 5:
+                removerProduto();
+                break;
+            case 6:
+                printf("Saindo do programa...\n");
+                break;
+            default:
+                printf("Opção inválida.\n");
+        }
+    } while (opcao != 6);
+
+    return 0;
+}
